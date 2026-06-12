@@ -97,14 +97,14 @@ function buildSection(section, index) {
     number.textContent = pad(i + 1);
     tile.appendChild(number);
 
-    const picture = new Image();
+    const picture = document.createElement("img");
     picture.loading = "lazy";
     picture.alt = img.title || `${section.title} ${i + 1}`;
-    picture.src = img.src;
 
-    picture.addEventListener("load", () => {
+    // Mark the tile as ready once the image actually loads.
+    const reveal = () => {
+      if (tile.classList.contains("has-image")) return;
       tile.classList.add("has-image");
-      tile.appendChild(picture);
       if (img.title) {
         tile.classList.add("has-caption");
         const cap = document.createElement("span");
@@ -114,8 +114,20 @@ function buildSection(section, index) {
       }
       tile.dataset.full = img.src;
       tile.dataset.caption = img.title || "";
-    });
+    };
+
+    picture.addEventListener("load", reveal);
+    // If the file isn't there, leave the numbered placeholder in place.
     picture.addEventListener("error", () => {});
+
+    // Put the image in the tile BEFORE setting src, then load it.
+    // (Setting src after the element is in the page lets lazy-loading
+    //  and the load event work reliably.)
+    tile.appendChild(picture);
+    picture.src = img.src;
+
+    // Handle images that were already cached and finished instantly.
+    if (picture.complete && picture.naturalWidth > 0) reveal();
 
     grid.appendChild(tile);
   });
