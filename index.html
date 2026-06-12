@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ArtParsa</title>
+  <meta name="description" content="ArtParsa — a portfolio of art, photography and AI images." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="home">
+
+  <header class="topbar">
+    <a class="wordmark" href="index.html">
+      <span class="wordmark-a">Art</span><span class="wordmark-b">Parsa</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="art.html" data-link="art">Art</a>
+      <a href="photos.html" data-link="photos">Photos</a>
+      <a href="ai.html" data-link="ai">AI Images</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="cover">
+      <h1 class="cover-title">Art<em>Parsa</em></h1>
+      <p class="cover-tagline">A portfolio of art, photography and AI images. Choose a collection to begin.</p>
+    </section>
+
+    <!-- The three sections are listed here automatically by gallery.js -->
+    <nav class="index-list" id="home" aria-label="Collections"></nav>
+  </main>
+
+  <footer class="site-footer">
+    <span>ArtParsa</span>
+    <span class="dot">·</span>
+    <span>Portfolio</span>
+  </footer>
+
+  <script src="gallery.js"></script>
+</body>
+</html>

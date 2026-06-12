@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Images — ArtParsa</title>
+  <meta name="description" content="AI Images — ArtParsa portfolio." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="ai">
+
+  <header class="topbar">
+    <a class="wordmark" href="index.html">
+      <span class="wordmark-a">Art</span><span class="wordmark-b">Parsa</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="art.html" data-link="art">Art</a>
+      <a href="photos.html" data-link="photos">Photos</a>
+      <a href="ai.html" data-link="ai">AI Images</a>
+    </nav>
+  </header>
+
+  <!-- The grid for this section is built automatically by gallery.js,
+       using data-section to know which one to show. -->
+  <main id="mount" data-section="ai"></main>
+
+  <footer class="site-footer">
+    <span>ArtParsa</span>
+    <span class="dot">·</span>
+    <span>Portfolio</span>
+  </footer>
+
+  <!-- Full-size image viewer -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+    <button class="lb-close" id="lbClose" aria-label="Close (Esc)">&times;</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous image">&#8249;</button>
+    <figure class="lb-figure">
+      <img id="lbImage" alt="" />
+      <figcaption id="lbCaption"></figcaption>
+    </figure>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next image">&#8250;</button>
+  </div>
+
+  <script src="gallery.js"></script>
+</body>
+</html>
