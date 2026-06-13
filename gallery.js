@@ -193,6 +193,33 @@ document.querySelectorAll(".nav a").forEach((a) => {
   a.classList.toggle("is-active", a.dataset.link === page);
 });
 
+/* ---------- branding: tab icon + small corner logo ---------- */
+/* Your logo image. Put a file with this name next to index.html.
+   To use a different logo later, just replace that file (or change
+   this name). Square images look best. */
+const LOGO_FILE = "logo.jpg";
+
+(function brand() {
+  // browser tab icon (favicon)
+  if (!document.querySelector('link[rel="icon"][data-brand]')) {
+    const fav = document.createElement("link");
+    fav.rel = "icon";
+    fav.href = LOGO_FILE;
+    fav.setAttribute("data-brand", "");
+    document.head.appendChild(fav);
+  }
+  // logo in the corner, next to the ArtParsa name
+  const wordmark = document.querySelector(".wordmark");
+  if (wordmark && !wordmark.querySelector(".brandmark")) {
+    const logo = document.createElement("img");
+    logo.className = "brandmark";
+    logo.src = LOGO_FILE;
+    logo.alt = "";
+    logo.setAttribute("aria-hidden", "true");
+    wordmark.prepend(logo);
+  }
+})();
+
 /* ---------- lightbox (full-size viewer) ---------- */
 const lightbox = document.getElementById("lightbox");
 if (lightbox) {
