@@ -127,6 +127,8 @@ main { flex: 1 0 auto; width: 100%; }
   line-height: 0.92;
   letter-spacing: -0.03em;
   margin: 0;
+  width: fit-content;   /* box hugs the word so the gradient spans all of it */
+  max-width: 100%;
   color: var(--ink); /* fallback if rainbow text isn't supported */
 }
 
@@ -134,8 +136,16 @@ main { flex: 1 0 auto; width: 100%; }
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .cover-title {
     background-image: linear-gradient(
-      95deg,
-      #ff4d8d, #ff7a3c, #e6a100, #2bb673, #00a7c4, #4a63e7, #9b4dff
+      90deg,
+      #5128a8 0%,
+      #2f3fd6 12%,
+      #1f8ae6 26%,
+      #12b7d8 38%,
+      #1fbf6f 50%,
+      #5cc12a 62%,
+      #ffd200 74%,
+      #ff8500 87%,
+      #ec1c24 100%
     );
     background-size: 100% auto;
     -webkit-background-clip: text;
