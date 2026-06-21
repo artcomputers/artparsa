@@ -90,3 +90,5 @@ in the four HTML files (the `<nav>` links) so they match.
 - **Image viewer:** click a tile for full screen; ← → to move between images,
   Esc to close.
 - **Mobile:** the grid drops to 2 columns on tablets, 1 on phones.
+
+#Created with Claude
