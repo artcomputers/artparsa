@@ -1,4 +1,4 @@
-# ArtParsa
+# ArtParsa (Created with Claude.ai)
 
 A simple portfolio website. Each collection — **Art**, **Photos**, and
 **AI Images** — is its own page, with a clean 3-per-row image grid. A home page
@@ -90,5 +90,3 @@ in the four HTML files (the `<nav>` links) so they match.
 - **Image viewer:** click a tile for full screen; ← → to move between images,
   Esc to close.
 - **Mobile:** the grid drops to 2 columns on tablets, 1 on phones.
-
-#Created with Claude
