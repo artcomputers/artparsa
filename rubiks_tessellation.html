@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isometric Cube Tessellation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<style>
+  /* Fills whatever container it's embedded in (e.g. the .side-pattern iframe) */
+  html, body { margin: 0; height: 100%; background: #ffffff; overflow: hidden; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<script>
+/*
+  Isometric Cube Tessellation — seamless rotating loop
+  ----------------------------------------------------
+  The plane is tiled with isometric cubes: each hexagon is a cube showing
+  three diamond faces, each face split into a 3x3 grid of stickers.
+
+  THE SEAMLESS TRICK:
+  All three faces of every cube share the SAME 3x3 sticker layout, arranged
+  cyclically. That gives every cube exact 120-degree rotational symmetry —
+  so when a cube spins 120 degrees it lands *identically* on itself.
+  Every spin therefore ends in the starting image, and the whole animation
+  loops perfectly with no visible seam.
+
+  The sticker matrix is also mirrored across its diagonal (M[i][j] = M[j][i]),
+  which is what creates the star / rosette patterns.
+
+  This version fills the browser window / iframe it lives in, rebuilds the
+  tiling on resize, and respects prefers-reduced-motion (shows the static
+  pattern instead of animating).
+
+  Interactions:
+    - Click / tap  -> reshuffle the colours
+    - Press S      -> save a PNG frame
+*/
+
+// ---------- Tweakables ----------
+const CUBE_R = 44;         // circumradius of each cube's hexagon (smaller = more cubes)
+const CYCLE  = 300;        // frames per full loop (~5s at 60fps)
+const SPIN   = 0.38;       // fraction of the cycle each cube spends spinning
+const SEED   = 7;          // change for a different colour arrangement
+
+// Classic cube-puzzle palette
+const PALETTE = ['#FFFFFF', '#CE2019', '#1E63B4', '#EF7C10', '#F2C500', '#118A45'];
+const LINE    = '#101010'; // sticker outlines
+
+const SQ3 = Math.sqrt(3);
+let A, B, C;               // the three cube-edge vectors, 120 degrees apart
+let cubes = [];
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  strokeJoin(ROUND);
+
+  // Edge vectors from the cube centre (screen coords, y points down):
+  // A = up-left, B = up-right, C = straight down.
+  A = { x: -SQ3 / 2 * CUBE_R, y: -CUBE_R / 2 };
+  B = { x:  SQ3 / 2 * CUBE_R, y: -CUBE_R / 2 };
+  C = { x: 0,                 y:  CUBE_R     };
+
+  buildCubes(SEED);
+
+  // Respect the visitor's OS-level motion preference:
+  // draw one static frame of the pattern instead of animating.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    noLoop();
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  buildCubes(SEED);
+}
+
+function buildCubes(seed) {
+  randomSeed(seed);
+  cubes = [];
+
+  const dx = SQ3 * CUBE_R;   // horizontal spacing of the honeycomb
+  const dy = 1.5 * CUBE_R;   // vertical spacing
+  const cols = ceil(width  / dx) + 2;
+  const rows = ceil(height / dy) + 2;
+
+  let maxD = 0;
+  for (let r = -1; r <= rows; r++) {
+    for (let q = -1; q <= cols; q++) {
+      const odd = ((r % 2) + 2) % 2 === 1;
+      const x = q * dx + (odd ? dx / 2 : 0);
+      const y = r * dy;
+
+      // 3x3 sticker layout, mirrored across the diagonal -> star patterns
+      const M = [[0,0,0],[0,0,0],[0,0,0]];
+      for (let i = 0; i < 3; i++) {
+        for (let j = i; j < 3; j++) {
+          const col = PALETTE[floor(random(PALETTE.length))];
+          M[i][j] = col;
+          M[j][i] = col;
+        }
+      }
+
+      const d = dist(x, y, width / 2, height / 2);
+      maxD = max(maxD, d);
+      cubes.push({ x, y, M, d });
+    }
+  }
+  // Ripple: spin delay grows with distance from the centre.
+  // Every cube finishes inside one cycle, so the loop stays seamless.
+  for (const cb of cubes) cb.delay = (cb.d / maxD) * (1 - SPIN);
+}
+
+function draw() {
+  background(LINE);
+  const t = (frameCount % CYCLE) / CYCLE;
+
+  for (const cb of cubes) {
+    let p = t - cb.delay;
+    if (p < 0) p += 1;
+
+    let ang = 0;
+    if (p < SPIN) ang = (TWO_PI / 3) * easeInOutCubic(p / SPIN);
+
+    push();
+    translate(cb.x, cb.y);
+    rotate(ang);
+    drawCube(cb.M);
+    pop();
+  }
+}
+
+function drawCube(M) {
+  // Faces in cyclic order: (A,B) top, (B,C) right, (C,A) left.
+  // Same sticker matrix on all three -> exact 120-degree symmetry.
+  const E = [A, B, C];
+  stroke(LINE);
+  strokeWeight(2.2);
+
+  for (let f = 0; f < 3; f++) {
+    const e1 = E[f], e2 = E[(f + 1) % 3];
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        fill(M[i][j]);
+        const x0 = (i / 3) * e1.x + (j / 3) * e2.x;
+        const y0 = (i / 3) * e1.y + (j / 3) * e2.y;
+        quad(
+          x0,                y0,
+          x0 + e1.x / 3,     y0 + e1.y / 3,
+          x0 + (e1.x + e2.x) / 3, y0 + (e1.y + e2.y) / 3,
+          x0 + e2.x / 3,     y0 + e2.y / 3
+        );
+      }
+    }
+  }
+}
+
+function easeInOutCubic(u) {
+  return u < 0.5 ? 4 * u * u * u : 1 - pow(-2 * u + 2, 3) / 2;
+}
+
+function mousePressed() {
+  buildCubes(floor(random(100000)));
+  redraw(); // ensures reshuffle still works when reduced-motion has paused the loop
+}
+
+function keyPressed() {
+  if (key === 's' || key === 'S') saveCanvas('cube_tessellation', 'png');
+}
+</script>
+</body>
+</html>

@@ -132,6 +132,22 @@ main { flex: 1 0 auto; width: 100%; }
   color: var(--ink); /* fallback if rainbow text isn't supported */
 }
 
+.side-pattern {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  width: min(320px, 26vw);
+  border: none;
+  z-index: 0;
+  /* fades the pattern into the white page instead of a hard edge */
+  mask-image: linear-gradient(to right, black 65%, transparent);
+  -webkit-mask-image: linear-gradient(to right, black 65%, transparent);
+}
+
+@media (max-width: 900px) {
+  .side-pattern { display: none; }
+}
+
 /* iridescent rainbow title — falls back to solid ink above on old browsers */
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .cover-title {
