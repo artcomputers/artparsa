@@ -279,3 +279,21 @@ if (lightbox) {
     if (e.key === "ArrowRight") step(1);
   });
 }
+
+/* ---------- animated moiré background (all pages) ---------- */
+/* Loads p5.js, then background.js, which draws the chromatic
+   wave-lines behind the page. Strength is set by --fx-opacity
+   in styles.css. To disable the background entirely, delete or
+   comment out this block. */
+(function loadBackground() {
+  if (document.getElementById("bgfx-loader")) return;
+  const p5s = document.createElement("script");
+  p5s.id = "bgfx-loader";
+  p5s.src = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js";
+  p5s.onload = () => {
+    const bg = document.createElement("script");
+    bg.src = "background.js";
+    document.body.appendChild(bg);
+  };
+  document.body.appendChild(p5s);
+})();

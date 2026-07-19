@@ -16,6 +16,10 @@
   --gap:       clamp(8px, 1.4vw, 18px);
   --radius:    3px;
   --maxw:      1240px;
+
+  /* Animated background strength: 0 = off, 1 = full blast.
+     0.22 keeps the moiré clearly visible but the content readable. */
+  --fx-opacity: 0.22;
 }
 
 * { box-sizing: border-box; }
@@ -43,6 +47,20 @@ a { color: inherit; }
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* ---------- animated moiré background layer ---------- */
+#bgfx {
+  position: fixed;
+  inset: 0;
+  z-index: -1;            /* behind everything */
+  opacity: var(--fx-opacity);
+  pointer-events: none;   /* never blocks clicks or scrolling */
+}
+#bgfx canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
 }
 
 /* ---------- top bar ---------- */
@@ -130,22 +148,6 @@ main { flex: 1 0 auto; width: 100%; }
   width: fit-content;   /* box hugs the word so the gradient spans all of it */
   max-width: 100%;
   color: var(--ink); /* fallback if rainbow text isn't supported */
-}
-
-.side-pattern {
-  position: fixed;
-  top: 0; left: 0;
-  height: 100vh;
-  width: min(320px, 26vw);
-  border: none;
-  z-index: 0;
-  /* fades the pattern into the white page instead of a hard edge */
-  mask-image: linear-gradient(to right, black 65%, transparent);
-  -webkit-mask-image: linear-gradient(to right, black 65%, transparent);
-}
-
-@media (max-width: 900px) {
-  .side-pattern { display: none; }
 }
 
 /* iridescent rainbow title — falls back to solid ink above on old browsers */
